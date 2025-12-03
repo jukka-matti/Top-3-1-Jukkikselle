@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Timosen Auto – Joensuun paluumuuttajan tarjoukset</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --bg-card: #ffffff;
+      --border: #e5e7eb;
+      --border-strong: #2563eb;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --accent-soft: #eff6ff;
+      --radius-lg: 1rem;
+      --radius-md: 0.75rem;
+      --shadow-soft: 0 12px 30px rgba(15,23,42,0.08);
+      --shadow-strong: 0 18px 40px rgba(37,99,235,0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe, #f3f4f6 45%, #e5e7eb);
+      color: var(--text-main);
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .page {
+        padding: 2.5rem 1.5rem 3.5rem;
+      }
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #f9fafb;
+      padding: 1.75rem 1.5rem;
+      border-radius: 1.25rem;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top right, rgba(96,165,250,0.35), transparent 55%),
+        radial-gradient(circle at bottom left, rgba(129,230,217,0.18), transparent 55%);
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.6rem, 2.5vw, 2rem);
+      letter-spacing: 0.01em;
+    }
+
+    .hero p.subtitle {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #e5e7eb;
+    }
+
+    .hero p.subtitle span {
+      opacity: 0.9;
+    }
+
+    .tagline {
+      margin-top: 0.85rem;
+      font-size: 0.9rem;
+      color: #cbd5f5;
+    }
+
+    .quiz {
+      background: var(--accent-soft);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.25rem;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(37,99,235,0.15);
+    }
+
+    @media (min-width: 768px) {
+      .quiz {
+        padding: 1.75rem 1.5rem;
+      }
+    }
+
+    .quiz h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.15rem;
+    }
+
+    .quiz-intro {
+      margin: 0 0 1rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 0.5rem;
+      margin-bottom: 0.9rem;
+    }
+
+    @media (min-width: 600px) {
+      .quiz-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .quiz-options label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.9);
+      border-radius: var(--radius-md);
+      padding: 0.6rem 0.7rem;
+      font-size: 0.9rem;
+      border: 1px solid rgba(37,99,235,0.15);
+      cursor: pointer;
+      transition: background 0.15s ease, box-shadow 0.15s ease,
+        transform 0.1s ease, border-color 0.15s ease;
+    }
+
+    .quiz-options label:hover {
+      background: #ffffff;
+      box-shadow: 0 5px 16px rgba(15,23,42,0.08);
+      transform: translateY(-1px);
+      border-color: rgba(37,99,235,0.4);
+    }
+
+    .quiz-options input[type="radio"] {
+      accent-color: #2563eb;
+      transform: scale(1.05);
+    }
+
+    .recommendation {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #1d4ed8;
+      font-weight: 500;
+    }
+
+    .offers {
+      display: grid;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (min-width: 880px) {
+      .offers {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .offer-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.25rem 1.3rem;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease,
+        border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .offer-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.12);
+    }
+
+    .offer-card.selected {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-strong);
+    }
+
+    .offer-label {
+      position: absolute;
+      top: 0.9rem;
+      right: 1rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: #dbebff;
+      color: #1d4ed8;
+      font-weight: 600;
+    }
+
+    .offer-label.joker {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .offer-card h3 {
+      margin: 0 0 0.4rem;
+      font-size: 1.05rem;
+      padding-right: 4.5rem;
+    }
+
+    .meta {
+      margin: 0 0 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .meta span {
+      display: inline-block;
+      margin-right: 0.3rem;
+    }
+
+    .meta-price {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .bullet-list {
+      margin: 0.5rem 0 0.75rem;
+      padding-left: 1.05rem;
+      font-size: 0.88rem;
+      color: #374151;
+    }
+
+    .bullet-list li + li {
+      margin-top: 0.2rem;
+    }
+
+    .explanation-toggle {
+      font-size: 0.8rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: background 0.16s ease, border-color 0.16s ease,
+        color 0.16s ease, transform 0.1s ease;
+    }
+
+    .explanation-toggle:hover {
+      background: #eff6ff;
+      border-color: #2563eb;
+      color: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .explanation {
+      margin-top: 0.7rem;
+      padding-top: 0.65rem;
+      border-top: 1px dashed #e5e7eb;
+      font-size: 0.86rem;
+      color: #4b5563;
+    }
+
+    .explanation p {
+      margin: 0 0 0.4rem;
+    }
+
+    .explanation p:last-child {
+      margin-bottom: 0;
+    }
+
+    .footer {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="hero-inner">
+        <h1>Timosen Auto – Joensuun paluumuuttajan tarjoussivu</h1>
+        <p class="subtitle">
+          Nykyinen autosi:
+          <span>BMW 1‑sarja F20 118d xDrive M Sport · 232&nbsp;000 km · tulossa vaihdossa sisään</span>
+        </p>
+        <p class="tagline">
+          Alla kolme järkivaihtoehtoa ja yksi jokeri – tehty juuri sinulle, perinnön saaneelle bemarikuskille.
+        </p>
+      </div>
+    </header>
+
+    <section class="quiz">
+      <h2>Mitä arvostat seuraavassa autossa eniten?</h2>
+      <p class="quiz-intro">
+        Valitse tärkein painotus. Sivu korostaa sinulle sopivinta autoa ja helpottaa päätöstä.
+      </p>
+      <div class="quiz-options">
+        <label>
+          <input type="radio" name="prio" value="future" />
+          Tulevaisuuden tekniikka & hiljainen, mukava kyyti
+        </label>
+        <label>
+          <input type="radio" name="prio" value="comfort" />
+          Mukava, huoleton arki kaupungissa & takuut
+        </label>
+        <label>
+          <input type="radio" name="prio" value="adventure" />
+          Neliveto, mökkitiet & talvikelit etusijalla
+        </label>
+        <label>
+          <input type="radio" name="prio" value="style" />
+          Persoonallinen jokeri, jossa vähän asennetta
+        </label>
+      </div>
+      <p id="recommendation" class="recommendation">
+        Valitse jokin yllä olevista, niin ehdotan sinulle sopivinta vaihtoehtoa.
+      </p>
+    </section>
+
+    <section class="offers">
+      <!-- Tarjous 1: Ioniq 5 -->
+      <article
+        id="offer-ioniq"
+        class="offer-card"
+        data-name="Hyundai IONIQ 5 – sähköinen loikka"
+      >
+        <div class="offer-label">Sähkö</div>
+        <h3>1. Hyundai IONIQ 5 73 kWh 217 hv Premium – “sähköinen loikka”</h3>
+        <p class="meta">
+          <span>2021</span> ·
+          <span>52&nbsp;000 km</span> ·
+          <span>täyssähkö · 217 hv</span> ·
+          <span>Premium-varustetaso</span> ·
+          <span class="meta-price">n. 29&nbsp;990&nbsp;€ (Timosen Auto Joensuu)</span>
+        </p>
+        <ul class="bullet-list">
+          <li>Täyssähkö, iso 73 kWh akku ja vahva vääntö – tuntuu bemariin verrattuna rauhallisen voimakkaalta.</li>
+          <li>Premium-herkut: 360‑kamera, Relax-istuimet, nahkasisusta, Bose ja lämpöpumppu tuovat “uuden auton” fiiliksen.</li>
+          <li>Hyvä tapa käyttää osa perinnöstä autoon, jonka tekniikka kestää Joensuu-paluun jälkeenkin monta vuotta.</li>
+        </ul>
+        <button
+          type="button"
+          class="explanation-toggle"
+          data-toggle="explanation-ioniq"
+        >
+          Näytä perustelut
+        </button>
+        <div id="explanation-ioniq" class="explanation" hidden>
+          <p>
+            Jos haluat hypätä suoraan seuraavalle vuosikymmenelle, IONIQ 5 on luonteva “sähköbemari”. Voima riittää hyvin,
+            ja hiljaisuus tekee pitkistä siivuista Joensuun ympärillä merkittävästi rennompia kuin nykyisessä F20:ssa.
+          </p>
+          <p>
+            Premium-varustetaso tarkoittaa myös sitä, että käytettynäkin auto tuntuu ylelliseltä:
+            pitkät matkat sujuvat Relax-istuimilla, 360‑kamera auttaa Joensuun parkkihalleissa ja lämpöpumppu parantaa
+            toimintamatkaa talvella.
+          </p>
+        </div>
+      </article>
+
+      <!-- Tarjous 2: Renault Arkana -->
+      <article
+        id="offer-arkana"
+        class="offer-card"
+        data-name="Renault Arkana – sporttinen hybridimaasturi"
+      >
+        <div class="offer-label">Hybrid</div>
+        <h3>2. Renault Arkana E‑Tech 145 Hybrid R.S. Line – “sporttinen Joensuun arki”</h3>
+        <p class="meta">
+          <span>2022</span> ·
+          <span>35&nbsp;000 km</span> ·
+          <span>hybridi · automaatti · 145 hv</span> ·
+          <span>R.S. Line -varustelu</span> ·
+          <span class="meta-price">n. 22&nbsp;940&nbsp;€ (Timosen Auto Joensuu)</span>
+        </p>
+        <ul class="bullet-list">
+          <li>Korkeampi ajoasento kuin 1‑sarjassa, mutta R.S. Line pitää ulkonäön ja fiiliksen sporttisena.</li>
+          <li>Hybridi säästää polttoainetta Joensuun kaupunki- ja taajama-ajossa, ja automaatti helpottaa arkea.</li>
+          <li>Merkkihuollettu, tehdastakuuta jäljellä ja vetokoukku valmiina muuttoon, kärryyn tai veneeseen.</li>
+        </ul>
+        <button
+          type="button"
+          class="explanation-toggle"
+          data-toggle="explanation-arkana"
+        >
+          Näytä perustelut
+        </button>
+        <div id="explanation-arkana" class="explanation" hidden>
+          <p>
+            Tämä on looginen “askel ylöspäin” bemarista: saat modernin, vähän katumaasturimaisen korin,
+            mutta yhä melko dynaamisen ajotuntuman ja siistin R.S. Line -ilmeen.
+          </p>
+          <p>
+            Hybridi on hyvä kompromissi, jos et ole vielä valmis hyppäämään täyssähköön. Takuun ja merkkihuoltohistorian
+            ansiosta tämä on huoleton valinta, joka sopii hyvin paluumuuttajalle, joka haluaa keskittyä muuhun kuin auton
+            korjaamiseen.
+          </p>
+        </div>
+      </article>
+
+      <!-- Tarjous 3: Suzuki Vitara -->
+      <article
+        id="offer-vitara"
+        class="offer-card"
+        data-name="Suzuki Vitara – järkiveto mökeille ja talveen"
+      >
+        <div class="offer-label">4×4</div>
+        <h3>3. Suzuki Vitara 1.4 Boosterjet 4WD GL+ 6AT Limited – “mökkitiet haltuun”</h3>
+        <p class="meta">
+          <span>2020</span> ·
+          <span>93&nbsp;000 km</span> ·
+          <span>bensa · automaatti · 4WD</span> ·
+          <span>GL+ Limited</span> ·
+          <span class="meta-price">n. 22&nbsp;980&nbsp;€ (Timosen Auto Joensuu)</span>
+        </p>
+        <ul class="bullet-list">
+          <li>Neliketo ja parempi maavara kuin 1‑sarjassa – talvikelit, mökkitiet ja huonot sorapinnat hoituvat rennommin.</li>
+          <li>Automaattilaatikko ja bensaturbo tekevät tästä hyvin suorituskykyisen mutta samalla yksinkertaisemman tekniikan ratkaisun.</li>
+          <li>Koko on helppo Joensuun keskustassa, mutta sisällä on silti riittävästi tilaa muuttokuormille ja harrasteille.</li>
+        </ul>
+        <button
+          type="button"
+          class="explanation-toggle"
+          data-toggle="explanation-vitara"
+        >
+          Näytä perustelut
+        </button>
+        <div id="explanation-vitara" class="explanation" hidden>
+          <p>
+            Jos pääpaino on käytännöllisyydessä ja mökkireissuissa, Vitara on erittäin järkevä päivitys.
+            Verrattuna bemariin saat paremmat kulkuominaisuudet huonolle tielle ja lumiseen parkkiin,
+            eikä ajaminen silti tunnu "pakettiautolta".
+          </p>
+          <p>
+            Tämä on hyvä vaihtoehto, kun haluat pitää kustannukset kurissa, mutta et halua luopua nelivedosta,
+            jota Joensuun seudulla arvostaa aina talvella.
+          </p>
+        </div>
+      </article>
+
+      <!-- Jokeri: Renault 4 -->
+      <article
+        id="offer-renault4"
+        class="offer-card"
+        data-name="Renault 4 – retrohenkinen täyssähköjokeri"
+      >
+        <div class="offer-label joker">Jokeri</div>
+        <h3>4. Renault 4 E‑Tech electric 150 hv comfort range techno – “retro‑sähköjokeri”</h3>
+        <p class="meta">
+          <span>2025</span> ·
+          <span>~1–2&nbsp;000 km</span> ·
+          <span>täyssähkö · 150 hv</span> ·
+          <span>comfort range techno</span> ·
+          <span class="meta-price">n. 36&nbsp;980&nbsp;€ (Timosen Auto Joensuu)</span>
+        </p>
+        <ul class="bullet-list">
+          <li>Täysin uusi retrohenkinen Renault 4 – moderni sähkötekniikka, mutta hauska, erottuva ulkonäkö.</li>
+          <li>52 kWh akku ja n. 150 hv moottori tarjoavat nykyaikaisen toimintamatkan ja ripeän suorituskyvyn.</li>
+          <li>Jokeri siinä mielessä, että tämä on selvästi kallein, mutta myös näyttävin vaihtoehto perintörahoilla.</li>
+        </ul>
+        <button
+          type="button"
+          class="explanation-toggle"
+          data-toggle="explanation-renault4"
+        >
+          Näytä perustelut
+        </button>
+        <div id="explanation-renault4" class="explanation" hidden>
+          <p>
+            Tämä vaihtoehto on sinulle, jos auto saa olla vähän statement. Retro-siluetti, täyssähkövoimalinja ja
+            korkea kori tekevät siitä samaan aikaan urbaanin ja käytännöllisen.
+          </p>
+          <p>
+            Tässä käytät perintöä tavallista rohkeammin: et osta vain kulkupeliä, vaan autoa, joka
+            herättää keskustelua parkkipaikalla ja tuntuu “uudelta vielä vuosien päästä”.
+          </p>
+        </div>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <p>
+        Tämä sivu perustuu Timosen Auto Joensuun tämänhetkisiin netti-ilmoituksiin – varasto elää ja hinnat voivat muuttua.
+        Voit muokata tekstejä selaimessa (F12 → Elements) tai tallentaa sivun eri versiona ennen jakamista.
+      </p>
+      <p>
+        Käytännössä: tallenna tämä tiedosto nimellä <strong>timosen-tarjoukset.html</strong>, avaa selaimessa
+        ja lähetä se eteenpäin esimerkiksi sähköpostilla tai viestiryhmässä.
+      </p>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      const cards = document.querySelectorAll(".offer-card");
+
+      function selectCard(card) {
+        cards.forEach((c) => c.classList.remove("selected"));
+        if (card) {
+          card.classList.add("selected");
+          card.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+
+      // Kortin valinta klikkauksella (mutta ei, jos painetaan nappia)
+      cards.forEach((card) => {
+        card.addEventListener("click", (event) => {
+          if (event.target.closest("button")) return;
+          selectCard(card);
+        });
+      });
+
+      // Perustelujen näyttö/piilotus
+      document.querySelectorAll("[data-toggle]").forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          const targetId = btn.getAttribute("data-toggle");
+          if (!targetId) return;
+          const target = document.getElementById(targetId);
+          if (!target) return;
+
+          const isHidden = target.hasAttribute("hidden");
+          if (isHidden) {
+            target.removeAttribute("hidden");
+            btn.textContent = "Piilota perustelut";
+          } else {
+            target.setAttribute("hidden", "");
+            btn.textContent = "Näytä perustelut";
+          }
+        });
+      });
+
+      // Pieni "mikä sopii sinulle" -logiikka
+      const recommendation = document.getElementById("recommendation");
+      const rules = {
+        future: "offer-ioniq",
+        comfort: "offer-arkana",
+        adventure: "offer-vitara",
+        style: "offer-renault4",
+      };
+
+      document.querySelectorAll('input[name="prio"]').forEach((input) => {
+        input.addEventListener("change", (event) => {
+          const value = event.target.value;
+          const id = rules[value];
+          const card = document.getElementById(id);
+          selectCard(card);
+
+          if (card) {
+            const name =
+              card.dataset.name ||
+              (card.querySelector("h3")
+                ? card.querySelector("h3").textContent.trim()
+                : "");
+            recommendation.textContent =
+              "Analyysin perusteella sinulle sopivin on: " + name;
+          } else {
+            recommendation.textContent =
+              "En löytänyt sopivaa vaihtoehtoa – päivitä sivu ja kokeile uudelleen.";
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
